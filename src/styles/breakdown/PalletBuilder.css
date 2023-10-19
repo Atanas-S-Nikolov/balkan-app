@@ -1,0 +1,36 @@
+.pallet_drop-zone {
+  aspect-ratio: 1 / 1;
+  background-color: white;
+  border: 1px dashed gray;
+  border-radius: 5%;
+  display: grid;
+  place-items: center;
+  padding: 0 1em;
+}
+
+.table_drop-zone {
+  aspect-ratio: auto;
+  padding: 0;
+}
+
+.add-pallet_btn {
+  top: 10px;
+}
+
+.return-product_cell {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@media (max-width: 520px) {
+  .pallet_drop-zone {
+    padding: 0;
+  }
+}
+
+@media (max-width: 775px) {
+  .pallet-builder {
+    margin-top: 1em;
+  }
+}
