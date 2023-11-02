@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const ProductConstraintSchema = new Schema({
   productId: {
@@ -15,8 +16,11 @@ const ProductConstraintSchema = new Schema({
     type: String,
     required: [true, 'Pallet type is required!'],
   },
-})
+},
+{ collection: 'productConstraints' }
+)
 
+ProductConstraintSchema.plugin(mongoosePaginate);
 const ProductConstraint = models.ProductConstraint || model('ProductConstraint', ProductConstraintSchema);
 
 export default ProductConstraint;

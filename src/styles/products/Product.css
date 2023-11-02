@@ -1,0 +1,18 @@
+.product {
+  background-color: transparent;
+  width: fit-content;
+  border-bottom: 2px solid lightblue;
+}
+
+.product_white-background {
+  background-color: white;
+}
+
+.card-actions {
+  justify-content: center;
+}
+
+.product-update_section {
+  display: flex;
+  align-items: center;
+}

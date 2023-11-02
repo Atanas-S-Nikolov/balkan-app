@@ -6,13 +6,14 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
     <Box>
       <AppBar position="static">
         <Toolbar className='nav' disableGutters>
-          <a href='/'>
+          <Link href='/'>
             <Image
               className='logo'
               src='/balkan-logo.jpg'
@@ -23,7 +24,7 @@ export default function Navbar() {
             <Typography variant="h6" component="div">
               Балкан АД - Разбивки
             </Typography>
-          </a>
+          </Link>
         </Toolbar>
       </AppBar>
     </Box>
