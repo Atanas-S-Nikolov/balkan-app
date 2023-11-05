@@ -1,3 +1,7 @@
+.create-button {
+  margin-bottom: 1em;
+}
+
 .dialog-content {
   display: flex;
   gap: 1em;
@@ -14,9 +18,5 @@
 @media (max-width: 700px) {
   .dialog-content {
     flex-direction: column;
-  }
-
-  .create-button {
-    margin-bottom: 1em;
   }
 }

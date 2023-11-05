@@ -8,10 +8,12 @@ export async function POST(request) {
 export async function GET(request) {
   const { searchParams } = request.nextUrl;
   const page = parseInt(searchParams.get('page')) || 1;
-  const query = ProductConstraint.find({});
+  const productId = searchParams.get('productId');
+  const parameters = productId ? { productId: {$regex: productId} } : {};
+  const query = ProductConstraint.find(parameters);
   return await executeDbCall(() => ProductConstraint.paginate(query, {
     page: page,
     limit: 50,
     sort: { productId: 1 }
   }));
-} 
+}

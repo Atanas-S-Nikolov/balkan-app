@@ -1,29 +1,21 @@
-'use client';
-
 import '@/styles/products/ProductContainer.css';
 
 import CustomPagination from "../utils/CustomPagination";
 import Product from "./Product";
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
 
 export default function ProductsContainer({ response }) {
-  const [productResponse, setProductResponse] = useState(response);
-  const { docs, totalDocs, totalPages } = productResponse;
+  const { docs, totalDocs, totalPages } = response;
   const docsCount = docs?.length;
-  
-  function handleResponseChange(response) {
-    setProductResponse(response);
-  }
 
   return (
     <div className="product-container grid-center">
-      {/* <div className='flex'>
-        <Typography>Изделия на страница: {docsCount}</Typography>
-        <Typography>Общо изделия: {totalDocs}</Typography>
-      </div> */}
+      <section className='products-count_section'>
+        <Typography>Изделия на страница: <b>{docsCount}</b></Typography>
+        <Typography>Общо изделия: <b>{totalDocs}</b></Typography>
+      </section>
       {docs?.map(product => <Product key={product.productId} product={product}/>)}
-      <CustomPagination className="pagination" pagesCount={totalPages} onChangeCallback={handleResponseChange}/>
+      <CustomPagination className="pagination" pagesCount={totalPages}/>
     </div>
   )
 }
