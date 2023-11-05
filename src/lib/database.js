@@ -25,10 +25,10 @@ export async function connectToDB() {
   }
 }
 
-export async function executeDbCall(promiseCallback) {
+export async function executeDbCall(promiseCallback, config = {}) {
   try {
     await connectToDB();
-    return NextResponse.json(await promiseCallback());
+    return NextResponse.json(await promiseCallback(), config);
   } catch(error) {
     console.log(error);
   }

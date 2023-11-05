@@ -2,6 +2,8 @@
 
 import '@/styles/products/Product.css';
 
+import { useState } from 'react';
+
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -12,22 +14,30 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 
-import { useState } from 'react';
 import ActionButton from '../utils/ActionButton';
+import PalletTypeSelect from '../utils/PalletTypeSelect';
+
+import { deleteProduct, updateProduct } from '@/app/services/ProductConstraintsService';
+import { inputValues, selectValues } from '@/constants/PalletTypeSelectConstants';
 
 const CustomTextField = (props) => (<TextField size='small' {...props} />);
 
 export default function Product({ product }) {
   const { productId, quantityPerPallet, palletType } = product;
+  const [updatedQuantity, setUpdatedQuantity] = useState(quantityPerPallet);
+  const [updatedPalletType, setUpdatedPalletType] = useState(selectValues.get(palletType));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [productClass, setProductClass] = useState(''); 
+  const [productClass, setProductClass] = useState('');
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   function handleDialogOpen() {
     setIsDialogOpen(true);
@@ -37,14 +47,57 @@ export default function Product({ product }) {
     setIsDialogOpen(false);
   };
 
-  function handleUpdateBtnClick() {
+  function handleSnackbarOpen(message) {
+    setSnackbarMessage(message);
+    setIsSnackbarOpen(true);
+  }
+
+  function handleSnackbarClose() {
+    setIsSnackbarOpen(false);
+    setSnackbarMessage('');
+  }
+
+  function handleQuantityChange(event) {
+    setUpdatedQuantity(event.target.value);
+  }
+
+  function handlePalletTypeChange(event) {
+    setUpdatedPalletType(event.target.value);
+  }
+
+  function handleCancel() {
+    setProductClass('');
+    setIsUpdating(false);
+  }
+
+  function handleUpdateBtnClick(event) {
+    event.preventDefault();
     setIsUpdating(true);
     setProductClass('product_white-background');
   }
 
-  function handleCancelBtnClick() {
-    setProductClass('');
-    setIsUpdating(false);
+  function handleCancelBtnClick(event) {
+    event.preventDefault();
+    handleCancel();
+  }
+
+  async function handleProductUpdate(event) {
+    event.preventDefault();
+    const productToUpdate = {
+      productId: productId,
+      quantityPerPallet: updatedQuantity,
+      palletType: inputValues.get(updatedPalletType)
+    };
+    const { message } = await updateProduct(productToUpdate);
+    handleSnackbarOpen(message);
+    handleCancel();
+  }
+
+  async function handleProductDelete(event) {
+    event.preventDefault();
+    const { message } = await deleteProduct(productId);
+    handleSnackbarOpen(message);
+    handleDialogClose();
   }
 
   function renderDefaultCardContent() {
@@ -63,11 +116,11 @@ export default function Product({ product }) {
         <p>Номер на изделие: <b>{productId}</b></p>
         <section className='product-update_section'>
           <p>Брой изделия в пале:</p>&nbsp;
-          <CustomTextField value={quantityPerPallet} />
+          <CustomTextField value={updatedQuantity} onChange={handleQuantityChange}/>
         </section>
         <section className='product-update_section'>
           <p>Тип на пале:</p>&nbsp;
-          <CustomTextField value={palletType} />
+          <PalletTypeSelect value={updatedPalletType} onChange={handlePalletTypeChange}/>
         </section>
       </CardContent>
     );
@@ -84,8 +137,8 @@ export default function Product({ product }) {
         </ActionButton>
         <ActionButton
           startIcon={<DeleteIcon />}
-          onClick={handleDialogOpen}
           color='error'
+          onClick={handleDialogOpen}
         >
           Изтрий
         </ActionButton>
@@ -105,6 +158,7 @@ export default function Product({ product }) {
         <ActionButton
           startIcon={<CheckIcon />}
           color='success'
+          onClick={handleProductUpdate}
         >
           Запази
         </ActionButton>
@@ -135,9 +189,15 @@ export default function Product({ product }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Не, запази изделието</Button>
-          <Button onClick={handleDialogClose} color='error'>Да, изтрий изделието</Button>
+          <Button onClick={handleProductDelete} color='error'>Да, изтрий изделието</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={5000}
+        message={snackbarMessage}
+        onClose={handleSnackbarClose}
+      />
     </>
   )
 }

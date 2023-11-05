@@ -2,6 +2,9 @@
 
 import '@/styles/utils/CreateProductForm.css';
 
+import { useState } from 'react';
+import { useMediaQuery } from '@react-hookz/web';
+
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Dialog from '@mui/material/Dialog';
@@ -9,21 +12,19 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { useState } from 'react';
-import { useMediaQuery } from '@react-hookz/web';
 import ActionButton from './ActionButton';
+import PalletTypeSelect from './PalletTypeSelect';
+
+import { createProduct } from '@/app/services/ProductConstraintsService';
+import { inputValues } from '@/constants/PalletTypeSelectConstants';
 
 const CustomTextField = (props) => (<TextField variant='filled' {...props}/>);
 
-export default function CreateProductForm({ request }) {
+export default function CreateProductForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -58,9 +59,31 @@ export default function CreateProductForm({ request }) {
     handleDialogOpen();
   }
 
+  function handleProductIdChange(event) {
+    const productCopy = {...product, productId: event.target.value};
+    setProduct(productCopy);
+  }
+
+  function handleQuantityPerPalletChange(event) {
+    const productCopy = {...product, quantityPerPallet: event.target.value};
+    setProduct(productCopy);
+  }
+
   function handleSelectChange(event) {
     const productCopy = {...product, palletType: event.target.value};
     setProduct(productCopy);
+  }
+
+  async function handleCreateProduct(event) {
+    event.preventDefault();
+    const product = {
+      productId: productId,
+      quantityPerPallet: quantityPerPallet,
+      palletType: inputValues.get(palletType)
+    };
+    const { message } = await createProduct(product);
+    handleSnackbarOpen(message);
+    handleDialogClose();
   }
 
   return (
@@ -77,29 +100,15 @@ export default function CreateProductForm({ request }) {
       <Dialog open={isDialogOpen} fullScreen={isMobile} maxWidth='fit-content' onClose={handleDialogClose}>
         <DialogTitle>Създаване на ново изделие</DialogTitle>
         <DialogContent className='dialog-content'>
-          <CustomTextField value={productId} label='Номер на изделие'/>
-          <CustomTextField value={quantityPerPallet} label='Брой изделия в пале'/>
-          <FormControl>
-            <InputLabel id="pallet-type-select-label">Тип на пале</InputLabel>
-            <Select
-              className='pallet-type_select'
-              labelId="pallet-type-select-label"
-              id="pallet-type-select"
-              label="Тип на пале"
-              variant='filled'
-              value={palletType}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value='euro'>евро</MenuItem>
-              <MenuItem value='ikea'>икеа</MenuItem>
-            </Select>
-          </FormControl>
+          <CustomTextField value={productId} label='Номер на изделие' onChange={handleProductIdChange}/>
+          <CustomTextField value={quantityPerPallet} label='Брой изделия в пале' onChange={handleQuantityPerPalletChange}/>
+          <PalletTypeSelect value={palletType} onChange={handleSelectChange}/>
         </DialogContent>
         <DialogActions className='dialog-actions'>
           <ActionButton startIcon={<CloseIcon/>} onClick={handleDialogClose}>
             Отказ
           </ActionButton>
-          <ActionButton startIcon={<AddIcon/>} color='success' onClick={handleDialogClose}>
+          <ActionButton startIcon={<AddIcon/>} color='success' onClick={handleCreateProduct}>
             Създай
           </ActionButton>
         </DialogActions>
