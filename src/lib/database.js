@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { connection } from "mongoose";
+import { NextResponse } from "next/server";
 
 let isConnected = false;
 
@@ -20,6 +21,15 @@ export async function connectToDB() {
     isConnected = true;
     console.log('MongoDB is connected')
   } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function executeDbCall(promiseCallback, config = {}) {
+  try {
+    await connectToDB();
+    return NextResponse.json(await promiseCallback(), config);
+  } catch(error) {
     console.log(error);
   }
 }

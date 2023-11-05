@@ -1,0 +1,18 @@
+.home {
+  list-style: none;
+  padding: 0;
+}
+
+.home a {
+  background-color: black;
+  margin: 1em auto;
+  padding: 1em 3em;
+  border-radius: 10px;
+  font-size: x-large;
+}
+
+@media (min-width: 550px) {
+  .home {
+    grid-auto-flow: column;
+  } 
+}

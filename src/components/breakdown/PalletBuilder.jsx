@@ -79,7 +79,7 @@ export default function PalletBuilder({ palletNumber, leftoverProducts, standard
     <div className='pallet-builder'>
       <Typography>Създай пале:</Typography>
       <TableContainer
-        className={`pallet_drop-zone ${dropZoneClassName}`}
+        className={`pallet_drop-zone grid-center ${dropZoneClassName}`}
         component={Box}
         onDrop={handleOnDrop}
         onDragOver={e => e.preventDefault()}

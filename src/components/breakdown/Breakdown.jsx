@@ -54,7 +54,6 @@ export default function Breakdown() {
   const [palletNumber, setPalletNumber] = useState();
   const [isPalletBuilderVisible, setIsPalletBuilderVisible] = useState(true);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const hasLeftovers = leftoverProducts.length > 0;
 
   const breakdownProducts = useCallback(() => {
@@ -97,8 +96,7 @@ export default function Breakdown() {
     event.dataTransfer.setData('rowIndex', row);
   }
 
-  function handleSnackbarOpen(message) {
-    setSnackbarMessage(message);
+  function handleSnackbarOpen() {
     setIsSnackbarOpen(true);
   }
 
@@ -108,7 +106,7 @@ export default function Breakdown() {
 
   function handleBuilderStandardPalletsUpdate(pallets) {
     setStandardPallets(pallets)
-    handleSnackbarOpen("Довавихте ново пале!");
+    handleSnackbarOpen();
   }
 
   function renderStandardPallets() {
@@ -190,7 +188,7 @@ export default function Breakdown() {
         <Snackbar
           open={isSnackbarOpen}
           autoHideDuration={5000}
-          message={snackbarMessage}
+          message='Довавихте ново пале!'
           onClose={handleSnackbarClose}
         />
       </div>

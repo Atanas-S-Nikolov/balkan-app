@@ -1,0 +1,15 @@
+.product-container {
+  margin-top: 1em;
+}
+
+.products-count_section {
+  display: flex;
+  gap: 1em;
+  margin-bottom: .5em;
+}
+
+@media (max-width: 360px) {
+  .products-count_section {
+    display: block;
+  }
+}

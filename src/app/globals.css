@@ -15,3 +15,8 @@ a {
   color: white;
   text-decoration: none;
 }
+
+.grid-center {
+  display: grid;
+  place-items: center;
+}
