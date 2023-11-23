@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <ul className={`${styles.home} grid-center`}>
       <li>
-        <Link href='/breakdown'>Разбивка</Link>
+        <Link href='/breakdown/input'>Разбивка</Link>
       </li>
       <li>
         <Link href='/products?page=1'>Изделия</Link>

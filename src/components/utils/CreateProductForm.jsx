@@ -102,7 +102,7 @@ export default function CreateProductForm() {
         <DialogContent className='dialog-content'>
           <CustomTextField value={productId} label='Номер на изделие' onChange={handleProductIdChange}/>
           <CustomTextField value={quantityPerPallet} label='Брой изделия в пале' onChange={handleQuantityPerPalletChange}/>
-          <PalletTypeSelect value={palletType} onChange={handleSelectChange}/>
+          <PalletTypeSelect value={palletType} variant='filled' onChange={handleSelectChange}/>
         </DialogContent>
         <DialogActions className='dialog-actions'>
           <ActionButton startIcon={<CloseIcon/>} onClick={handleDialogClose}>

@@ -14,7 +14,12 @@ export async function createProduct(product) {
   return await response.json();
 }
 
-export async function getAllProducts(productId, page) {
+export async function getProduct(productId) {
+  const response = await fetch(`${process.env.SERVER_URL}/api/productConstraints/${productId}`, { cache: 'no-store' });
+  return await response.json();
+}
+
+export async function getProducts(productId, page) {
   const productIdQueryString = productId ? createQueryString('productId', productId) : '';
   const queryString = createQueryString('page', page, productIdQueryString);
   const response = await fetch(`${process.env.SERVER_URL}/api/productConstraints?${queryString}`, {
