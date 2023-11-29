@@ -15,12 +15,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
 import CloseIcon from '@mui/icons-material/Close';
+import PalletTypeSelect from '../utils/PalletTypeSelect';
+import { inputValues } from '@/constants/PalletTypeSelectConstants';
 
 export default function PalletBuilder({ palletNumber, leftoverProducts, standardPallets, onUpdateLeftovers, onUpdateStandardPallets,
   onUpdatePalletNumber, setIsVisibleCallback }) {
   const [products, setProducts] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [dropZoneClassName, setDropZoneClassName] = useState('');
+  const [palletType, setPalletType] = useState('euro');
   const hasProducts = products.length > 0;
 
   function handleOnDrop(event) {
@@ -49,7 +52,8 @@ export default function PalletBuilder({ palletNumber, leftoverProducts, standard
       return {
         palletName: `Пале ${palletNumber}`,
         productId,
-        quantity
+        quantity,
+        palletType: inputValues.get(palletType)
       }
     })
     onUpdateStandardPallets([...standardPallets, ...newProducts]);
@@ -66,6 +70,10 @@ export default function PalletBuilder({ palletNumber, leftoverProducts, standard
     const productToReturn = products[index];
     products.splice(index, 1);
     onUpdateLeftovers([...leftoverProducts, productToReturn]);
+  }
+
+  function handlePalletTypeChange(event) {
+    setPalletType(event.target.value);
   }
 
   useEffect(() => {
@@ -112,14 +120,17 @@ export default function PalletBuilder({ palletNumber, leftoverProducts, standard
             : <Typography variant='body2'><i>Постави изделията тук:</i></Typography>
         }
       </TableContainer>
-      <Button
-        className='add-pallet_btn'
-        variant='contained'
-        disabled={isButtonDisabled}
-        onClick={handleAddPallet}
-      >
-        Ново пале
-      </Button>
+      <div className='actions'>
+        <Button
+          className='add-pallet_btn'
+          variant='contained'
+          disabled={isButtonDisabled}
+          onClick={handleAddPallet}
+        >
+          Ново пале
+        </Button>
+        <PalletTypeSelect disabled={isButtonDisabled} value={palletType} onChange={handlePalletTypeChange}/>
+      </div>
     </div>
   )
 }

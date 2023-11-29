@@ -1,16 +1,20 @@
 import styles from './page.module.css';
 
-import Link from 'next/link'
+import App from '@/components/App';
+
+import { executeDbCall } from "@/lib/database";
+import InputProduct from "@/models/InputProduct";
+
+async function getProducts() {
+  'use server';
+  const request = await executeDbCall(() => InputProduct.find({}));
+  return await request.json();
+}
 
 export default function Home() {
   return (
     <ul className={`${styles.home} grid-center`}>
-      <li>
-        <Link href='/breakdown/input'>Разбивка</Link>
-      </li>
-      <li>
-        <Link href='/products?page=1'>Изделия</Link>
-      </li>
+      <App inputProductsRequest={getProducts}/>
     </ul>
   )
 }

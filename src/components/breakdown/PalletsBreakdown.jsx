@@ -42,7 +42,6 @@ export default function PalletsBreakdown() {
   const [isPalletBuilderVisible, setIsPalletBuilderVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isCopyBtnVisible, setIsCopyBtnVisible] = useState(false);
-  const [isNewBreakdownBtnVisible, setIsNewBreakdownBtnVisible] = useState(false);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [standardPallets, setStandardPallets] = useState([]);
   const [leftoverProducts, setLeftoverProducts] = useState([]);
@@ -113,7 +112,6 @@ export default function PalletsBreakdown() {
     handleSnackbarOpen();
     if (!hasLeftovers) {
       setIsCopyBtnVisible(true);
-      setIsNewBreakdownBtnVisible(true);
     }
   }
 
@@ -159,102 +157,100 @@ export default function PalletsBreakdown() {
       {
         isLoaded
           ? (
-            <TableContainer className='table' component={Paper}>
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell colSpan={4}>{standardPalletsTitle}</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {renderStandardPallets()}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )
-        : <CircularProgress disableShrink/>
-      }
-      
-      <div className='drag-and-drop_container'>
-        {
-          hasLeftovers
-            ? (
+            <>
               <TableContainer className='table' component={Paper}>
                 <Table size='small'>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell colSpan={2}>{leftoverProductsTitle}</StyledTableCell>
+                      <StyledTableCell colSpan={4}>{standardPalletsTitle}</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {leftoverProducts.map((leftover, index) => {
-                      const { productId, quantity } = leftover;
-                      return (
-                        <TableRow
-                          className='leftover-row'
-                          key={productId}
-                          draggable
-                          onDragStart={event => handleOnDrag(event, index)}
-                        >
-                          <TableCell align='center'>{productId}</TableCell>
-                          <TableCell align='center'>{quantity}</TableCell>
-                        </TableRow>
-                      );
-                    }).sort((leftover1, leftover2) => leftover1.productId > leftover2.productId)}
+                    {renderStandardPallets()}
                   </TableBody>
                 </Table>
               </TableContainer>
-            )
-            : null
-        }
-        {
-          isLoaded & isPalletBuilderVisible
-            ? <PalletBuilder
-              palletNumber={palletNumber}
-              leftoverProducts={leftoverProducts}
-              standardPallets={standardPallets}
-              onUpdateLeftovers={setLeftoverProducts}
-              onUpdateStandardPallets={handleBuilderStandardPalletsUpdate}
-              onUpdatePalletNumber={setPalletNumber}
-              setIsVisibleCallback={setIsPalletBuilderVisible}
-            />
-            : null
-        }
-        <Snackbar
-          open={isSnackbarOpen}
-          autoHideDuration={5000}
-          message='Довавихте ново пале!'
-          onClose={handleSnackbarClose}
-        />
-      </div>
-      <div>
-        {
-          isCopyBtnVisible
-            ? <Button
-                className='copy-btn'
-                variant='contained'
-                startIcon={<ContentCopyIcon/>}
-                onClick={handleCopyBtnClick}
-              >
-                Копирай всичко
-              </Button>
-            : null
-        }
-        <br/>
-        <br/>
-        {
-          isNewBreakdownBtnVisible
-            ? <Button
-                className='copy-btn'
-                variant='contained'
-                startIcon={<ReplayIcon/>}
-                onClick={navigateToBreakdownInput}
-              >
-                Нова разбивка
-              </Button>
-            : null
-        }
-      </div>
+              <div className='drag-and-drop_container'>
+                {
+                  hasLeftovers
+                    ? (
+                      <TableContainer className='table' component={Paper}>
+                        <Table size='small'>
+                          <TableHead>
+                            <TableRow>
+                              <StyledTableCell colSpan={2}>{leftoverProductsTitle}</StyledTableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {leftoverProducts.map((leftover, index) => {
+                              const { productId, quantity } = leftover;
+                              return (
+                                <TableRow
+                                  className='leftover-row'
+                                  key={productId}
+                                  draggable
+                                  onDragStart={event => handleOnDrag(event, index)}
+                                >
+                                  <TableCell align='center'>{productId}</TableCell>
+                                  <TableCell align='center'>{quantity}</TableCell>
+                                </TableRow>
+                              );
+                            }).sort((leftover1, leftover2) => leftover1.productId > leftover2.productId)}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )
+                    : null
+                }
+                {
+                  isPalletBuilderVisible
+                    ? <PalletBuilder
+                      palletNumber={palletNumber}
+                      leftoverProducts={leftoverProducts}
+                      standardPallets={standardPallets}
+                      onUpdateLeftovers={setLeftoverProducts}
+                      onUpdateStandardPallets={handleBuilderStandardPalletsUpdate}
+                      onUpdatePalletNumber={setPalletNumber}
+                      setIsVisibleCallback={setIsPalletBuilderVisible}
+                    />
+                    : null
+                }
+                <Snackbar
+                  open={isSnackbarOpen}
+                  autoHideDuration={5000}
+                  message='Довавихте ново пале!'
+                  onClose={handleSnackbarClose}
+                />
+              </div>
+              <div>
+                {
+                  isCopyBtnVisible
+                    ? <>
+                      <Button
+                        className='copy-btn'
+                        variant='contained'
+                        startIcon={<ContentCopyIcon />}
+                        onClick={handleCopyBtnClick}
+                      >
+                        Копирай всичко
+                      </Button>
+                      <br />
+                    </>
+                    : null
+                }
+                <br />
+                <Button
+                  variant='contained'
+                  startIcon={<ReplayIcon />}
+                  onClick={navigateToBreakdownInput}
+                >
+                  Нова разбивка
+                </Button>
+              </div>
+            </>
+          )
+          : <CircularProgress disableShrink />
+      }
     </div>
   )
 }

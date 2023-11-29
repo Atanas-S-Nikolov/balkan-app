@@ -65,9 +65,11 @@ export default function Product({ product }) {
     setUpdatedPalletType(event.target.value);
   }
 
-  function handleCancel() {
+  function resetUpdateState() {
     setProductClass('');
     setIsUpdating(false);
+    setUpdatedQuantity(quantityPerPallet);
+    setUpdatedPalletType(selectValues.get(palletType));
   }
 
   function handleUpdateBtnClick(event) {
@@ -76,9 +78,9 @@ export default function Product({ product }) {
     setProductClass('product_white-background');
   }
 
-  function handleCancelBtnClick(event) {
+  function handleCancelBtnClick(event) {  
     event.preventDefault();
-    handleCancel();
+    resetUpdateState();
   }
 
   async function handleProductUpdate(event) {
@@ -90,7 +92,7 @@ export default function Product({ product }) {
     };
     const { message } = await updateProduct(productToUpdate);
     handleSnackbarOpen(message);
-    handleCancel();
+    resetUpdateState();
   }
 
   async function handleProductDelete(event) {
