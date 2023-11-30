@@ -39,7 +39,7 @@ export default function BreakdownInput() {
   async function navigateToBreakdown(event) {
     event.preventDefault();
     await createInputProducts(products);
-    router.replace('./');
+    router.push('./');
   }
 
   return (
