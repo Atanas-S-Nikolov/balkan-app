@@ -132,7 +132,7 @@ export default function PalletsBreakdown() {
   async function navigateToBreakdownInput(event) {
     event.preventDefault();
     await deleteInputProducts();
-    router.push(`${pathname}/input`);
+    router.replace(`${pathname}/input`);
   }
 
   function renderStandardPallets() {
