@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "",
   experimental: {
     serverComponentsExternalPackages: ["mongoose"],
     serverActions: true,
