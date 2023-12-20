@@ -1,0 +1,11 @@
+.footer {
+  margin-top: 3em;
+  text-align: center;
+}
+
+.footer_content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

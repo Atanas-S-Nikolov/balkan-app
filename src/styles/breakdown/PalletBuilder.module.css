@@ -1,0 +1,42 @@
+.pallet_drop_zone {
+  aspect-ratio: 1 / 1;
+  background-color: white;
+  border: 1px dashed gray;
+  border-radius: 5%;
+  padding: 0 1em;
+}
+
+.table_drop_zone {
+  aspect-ratio: auto;
+  padding: 0;
+}
+
+.actions {
+  margin-top: 1rem;
+}
+
+.add_pallet_btn {
+  margin-right: 1rem;
+}
+
+.pallet_type_select {
+  width: 95px;
+}
+
+.return_product_cell {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@media (max-width: 520px) {
+  .pallet_drop_zone {
+    padding: 0;
+  }
+}
+
+@media (max-width: 775px) {
+  .pallet_builder {
+    margin-top: 1em;
+  }
+}

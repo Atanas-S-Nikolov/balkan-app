@@ -1,0 +1,22 @@
+.create_button {
+  margin-bottom: 1em;
+}
+
+.dialog_content {
+  display: flex;
+  gap: 1em;
+}
+
+.dialog_actions {
+ justify-content: center;
+}
+
+.pallet_type_select {
+  min-width: 200px;
+}
+
+@media (max-width: 700px) {
+  .dialog_content {
+    flex-direction: column;
+  }
+}

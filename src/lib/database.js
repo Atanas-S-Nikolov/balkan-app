@@ -1,5 +1,4 @@
 import mongoose, { connection } from "mongoose";
-import { NextResponse } from "next/server";
 
 let isConnected = false;
 
@@ -25,10 +24,10 @@ export async function connectToDB() {
   }
 }
 
-export async function executeDbCall(promiseCallback, config = {}) {
+export async function executeDbCall(promiseCallback) {
   try {
     await connectToDB();
-    return NextResponse.json(await promiseCallback(), config);
+    return await promiseCallback();
   } catch(error) {
     console.log(error);
   }

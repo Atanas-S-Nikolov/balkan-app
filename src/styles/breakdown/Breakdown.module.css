@@ -1,0 +1,32 @@
+.grid_center {
+  margin-top: 1em;
+}
+
+.order_identifiers {
+  display: flex;
+  gap: 8em;
+}
+
+.wrapper {
+  display: grid;
+  grid-auto-flow: column;
+  width: fit-content;
+  margin-top: 1em;
+  gap: 5em;
+}
+
+.table {
+  height: fit-content;
+}
+
+.copy_btn {
+  height: fit-content;
+}
+
+@media (min-width: 775px) {
+  .drag_and_drop_container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: inherit;
+  }
+}

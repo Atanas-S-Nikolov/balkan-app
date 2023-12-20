@@ -1,0 +1,8 @@
+.leftover_row:hover {
+  cursor: grab;
+  background-color: gainsboro;
+}
+
+.leftover_row:active {
+  cursor: grabbing;
+}

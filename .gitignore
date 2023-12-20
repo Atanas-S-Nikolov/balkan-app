@@ -36,3 +36,4 @@ next-env.d.ts
 
 # impl
 /src/app/init
+/src/pages/init
