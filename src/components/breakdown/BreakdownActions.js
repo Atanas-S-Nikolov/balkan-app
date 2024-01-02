@@ -4,6 +4,11 @@ import { useEffect, useState, useCallback } from "react"
 
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import ReplayIcon from '@mui/icons-material/Replay';
 
@@ -21,6 +26,7 @@ export default function BreakdownActions({ order }) {
   const [isExcelDownloaderVisible, setIsExcelDownloaderVisible] = useState(false);
   const [excelData, setExcelData] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [orderResponse, setOrderResponse] = useState(order);
   const { standardPallets, leftoverProducts, builderProducts } = orderResponse;
   const hasLeftovers = leftoverProducts?.length > 0;
@@ -34,6 +40,14 @@ export default function BreakdownActions({ order }) {
   function handleSnackbarClose() {
     setIsSnackbarOpen(false);
   }
+
+  function handleDialogOpen() {
+    setIsDialogOpen(true);
+  };
+
+  function handleDialogClose() {
+    setIsDialogOpen(false);
+  };
 
   function handleAfterStandardPalletsUpdate() {
     handleSnackbarOpen();
@@ -57,7 +71,7 @@ export default function BreakdownActions({ order }) {
         const row = {
           'Номер на пале': palletName,
           'Номер на изделие': pallet.productId,
-          'Бройка изделия в пале': pallet.quantity.toString(),
+          'Бройка изделия в пале': pallet.quantity,
           'Вид пале': pallet.palletType
         };
         const emptyRow = {
@@ -82,7 +96,7 @@ export default function BreakdownActions({ order }) {
     }
   }, [hasLeftovers, hasBuilderProducts, createExcelData])
 
-  async function navigateToBreakdownInput(event) {
+  async function handleDeleteOrder(event) {
     event.preventDefault();
     await deleteOrder(orderId);
     router.replace('./input');
@@ -118,13 +132,30 @@ export default function BreakdownActions({ order }) {
             <Button
               variant='contained'
               startIcon={<ReplayIcon />}
-              onClick={navigateToBreakdownInput}
+              onClick={handleDialogOpen}
             >
               Нова разбивка
             </Button>
           </div>
         </div>
       </div>
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+      >
+        <DialogTitle>
+          Наистина ли искате да започнете нова разбивка?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Изчистване на текущата разбивка и започване на нова.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Не, продължи с текущата разбивка</Button>
+          <Button onClick={handleDeleteOrder} color='error'>Да, започни нова разбика</Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
