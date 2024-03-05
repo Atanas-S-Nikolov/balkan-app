@@ -13,7 +13,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import Snackbar from '@mui/material/Snackbar';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,6 +24,8 @@ import PalletTypeSelect from '../utils/PalletTypeSelect';
 
 import { deleteProduct, updateProduct } from '@/services/ProductConstraintsService';
 import { inputValues, selectValues } from '@/constants/PalletTypeSelectConstants';
+import { validateProductQuantity } from '@/utils/ValidationUtils';
+import SnackbarAlert from '../utils/SnackbarAlert';
 
 const CustomTextField = (props) => (<TextField size='small' {...props} />);
 
@@ -37,6 +38,7 @@ export default function Product({ product }) {
   const [productClass, setProductClass] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [quantityErrorMessageMessage, setQuantityErrorMessage] = useState("");
   const router = useRouter();
 
   function handleDialogOpen() {
@@ -72,6 +74,19 @@ export default function Product({ product }) {
     setUpdatedPalletType(selectValues.get(palletType));
   }
 
+  function resetErrorState() {
+    setQuantityErrorMessage("");
+  }
+
+  function validateInput() {
+    resetErrorState();
+    if (!validateProductQuantity(updatedQuantity)) {
+      setQuantityErrorMessage("'Брой изделия в пале' е задължителен или неправилен");
+      return false;
+    }
+    return true;
+  }
+
   function handleUpdateBtnClick(event) {
     event.preventDefault();
     setIsUpdating(true);
@@ -81,6 +96,7 @@ export default function Product({ product }) {
   function handleCancelBtnClick(event) {  
     event.preventDefault();
     resetUpdateState();
+    resetErrorState();
   }
 
   async function handleProductUpdate(event) {
@@ -90,10 +106,12 @@ export default function Product({ product }) {
       quantityPerPallet: updatedQuantity,
       palletType: inputValues.get(updatedPalletType)
     };
-    const { message } = await updateProduct(productToUpdate);
-    handleSnackbarOpen(message);
-    resetUpdateState();
-    router.reload();
+    if (validateInput()) {
+      const { message } = await updateProduct(productToUpdate);
+      handleSnackbarOpen(message);
+      resetUpdateState();
+      router.reload();
+    }
   }
 
   async function handleProductDelete(event) {
@@ -120,7 +138,12 @@ export default function Product({ product }) {
         <p>Номер на изделие: <b>{productId}</b></p>
         <section className={styles.product_update_section}>
           <p>Брой изделия в пале:</p>&nbsp;
-          <CustomTextField value={updatedQuantity} onChange={handleQuantityChange}/>
+          <CustomTextField
+            value={updatedQuantity}
+            error={!!quantityErrorMessageMessage}
+            helperText={quantityErrorMessageMessage}
+            onChange={handleQuantityChange}
+          />
         </section>
         <section className={styles.product_update_section}>
           <p>Тип на пале:</p>&nbsp;
@@ -196,7 +219,7 @@ export default function Product({ product }) {
           <Button onClick={handleProductDelete} color='error'>Да, изтрий изделието</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
+      <SnackbarAlert
         open={isSnackbarOpen}
         autoHideDuration={5000}
         message={snackbarMessage}

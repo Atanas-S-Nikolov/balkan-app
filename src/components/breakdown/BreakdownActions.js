@@ -2,7 +2,6 @@ import styles from '@/styles/breakdown/Breakdown.module.css';
 
 import { useEffect, useState, useCallback } from "react"
 
-import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,6 +20,7 @@ import LeftoverProductsTable from './LeftoverProductsTable';
 import StandardPalletsTable from './StandardPalletsTable';
 import ExcelFileDownloader from '../utils/ExcelFileDownloader';
 import dayjs from 'dayjs';
+import SnackbarAlert from '../utils/SnackbarAlert';
 
 export default function BreakdownActions({ order }) {
   const [isExcelDownloaderVisible, setIsExcelDownloaderVisible] = useState(false);
@@ -28,11 +28,13 @@ export default function BreakdownActions({ order }) {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [orderResponse, setOrderResponse] = useState(order);
+  const router = useRouter();
+
+  const { orderId, orderDate } = order
   const { standardPallets, leftoverProducts, builderProducts } = orderResponse;
   const hasLeftovers = leftoverProducts?.length > 0;
   const hasBuilderProducts = builderProducts?.length > 0;
-  const router = useRouter();
-  const { orderId, orderDate } = order
+  
   function handleSnackbarOpen() {
     setIsSnackbarOpen(true);
   }
@@ -43,11 +45,11 @@ export default function BreakdownActions({ order }) {
 
   function handleDialogOpen() {
     setIsDialogOpen(true);
-  };
+  }
 
   function handleDialogClose() {
     setIsDialogOpen(false);
-  };
+  }
 
   function handleAfterStandardPalletsUpdate() {
     handleSnackbarOpen();
@@ -113,7 +115,7 @@ export default function BreakdownActions({ order }) {
             setOrderCallback={handleSetOrderCallback}
             afterStandardPalletsUpdateCallback={handleAfterStandardPalletsUpdate}
           />
-          <Snackbar
+          <SnackbarAlert
             open={isSnackbarOpen}
             autoHideDuration={5000}
             message='Довавихте ново пале!'
@@ -144,16 +146,16 @@ export default function BreakdownActions({ order }) {
         onClose={handleDialogClose}
       >
         <DialogTitle>
-          Наистина ли искате да започнете нова разбивка?
+          Наистина ли искате да направите нова разбивка?
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Изчистване на текущата разбивка и започване на нова.
+            Това действие ще изтрие цялата информация за текущата разбивка.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>Не, продължи с текущата разбивка</Button>
-          <Button onClick={handleDeleteOrder} color='error'>Да, започни нова разбика</Button>
+          <Button onClick={handleDialogClose}>Не, запази текущата разбивка</Button>
+          <Button onClick={handleDeleteOrder} color='error'>Да, нова разбивка</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -1,4 +1,4 @@
-import mongoose, { connection } from "mongoose";
+import mongoose from "mongoose";
 
 let isConnected = false;
 
@@ -30,5 +30,6 @@ export async function executeDbCall(promiseCallback) {
     return await promiseCallback();
   } catch(error) {
     console.log(error);
+    throw error;
   }
 }

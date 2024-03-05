@@ -8,7 +8,7 @@ async function breakdownProducts({ orderId, orderDate, inputProducts }) {
   const resolved = await Promise.all(promises);
   inputProducts.forEach((item, index) => {
     const response = resolved[index];
-    const productConstraint = response[0];
+    const productConstraint = response;
     if (!productConstraint) {
       console.log(item);
       return;

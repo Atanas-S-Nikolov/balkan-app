@@ -45,6 +45,11 @@ export default function BreakdownInput() {
       setOrderDateError(true);
       return;
     }
+    if (!dayjs(value).isValid()) {
+      setOrderDateErrorMessage('Датата е неправилна');
+      setOrderDateError(true);
+      return;
+    }
     setOrderDateErrorMessage('');
     setOrderDateError(false);
     setOrderDate(value);
@@ -61,6 +66,11 @@ export default function BreakdownInput() {
         return;
       }
       const [productId, quantity] = row.split(/\s+/);
+      if (parseInt(quantity) < 1) {
+        setProductsErrorMessage(`Бройката за изделие с номер "${productId}" е неправилна`);
+        setProductsError(true);
+        return;
+      }
       return { productId, quantity };
     });
     if (!inputProducts.includes(undefined)) {
