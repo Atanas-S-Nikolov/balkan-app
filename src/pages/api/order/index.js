@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     if (method === POST) {
       const order = await executeDbCall(() => Order.create(body));
       res.status(201).json(order);
-    } else if (PUT) {
+    } else if (method === PUT) {
       const order = await executeDbCall(() => Order.findOneAndUpdate({ orderId: body.orderId }, body));
       res.status(200).json(order);
     }
